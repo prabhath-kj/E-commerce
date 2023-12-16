@@ -4,6 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import connectDB from "./config/dbConfig.js";
+import categoryRoutes from "./routes/categoryRoutes.js"
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -27,5 +28,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("short"));
 
 // Routes
-app.get("/",(req,res)=>res.json({message:"success"}))
+app.use("/api/category",categoryRoutes)
+
 export default app;

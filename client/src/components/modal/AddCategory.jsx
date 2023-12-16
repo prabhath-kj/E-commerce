@@ -1,5 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
+import productApi from "../../api/productApi";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 const AddCategoryModal = ({ onClose }) => {
@@ -7,12 +9,16 @@ const AddCategoryModal = ({ onClose }) => {
     categoryName: Yup.string().required("Category Name is required"),
   });
 
-  const onSubmit = (values) => {
-    console.log("Form submitted with values:", values);
-    // Customize this function to make an API call to the backend with the form data
-    // apiCall(values).then(() => {
-    //   onClose();
-    // });
+  const onSubmit = async (values) => {
+    try {
+      const response = await productApi.addCategory(values);
+     console.log(response)
+      toast.success("Category added successfully");
+      onClose();
+    } catch (error) {
+      toast.error("Failed to add category. Please try again.");
+      console.error("API error:", error);
+    }
   };
 
   const formik = useFormik({
@@ -31,10 +37,8 @@ const AddCategoryModal = ({ onClose }) => {
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-              <div className="text-3xl font-semibold text-center">
-                Add Category
-              </div>
+            <div className="flex items-start justify-center p-5 border-b border-solid border-blueGray-200 rounded-t">
+              Add Category
             </div>
             {/*body*/}
             <form onSubmit={formik.handleSubmit}>

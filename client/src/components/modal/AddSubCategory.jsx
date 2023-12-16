@@ -34,7 +34,7 @@ const AddSubcategoryModal = ({ onClose }) => {
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
-            <div className="text-3xl font-semibold text-center">
+            <div className="flex items-start justify-center p-5 border-b border-solid border-blueGray-200 rounded-t">
               Add Subcategory
             </div>
             {/*body*/}

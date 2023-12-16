@@ -10,10 +10,6 @@ const ProductList = ({ products }) => {
 
   const buttonNames = ["Add Category", "Add Sub Category", "Add Product"];
 
-  // const openModal = (type) => {
-  //   console.log(type);
-  //   setModalType(type);
-  // };
 
   const closeModal = () => {
     setModalType(null);
@@ -37,7 +33,7 @@ const ProductList = ({ products }) => {
       {renderModal()}
 
       {/* Product cards on the right */}
-      <div className="">
+      <div className="absolute top-0 right-0">
         {buttonNames.map((name, index) => (
           <OrangeButton key={index} setModalType={setModalType}>
             {name}

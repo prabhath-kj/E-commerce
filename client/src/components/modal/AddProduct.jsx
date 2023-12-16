@@ -24,7 +24,7 @@ const AddProductModal = ({ onClose }) => {
   });
 
   const onSubmit = (values) => {
-    alert(values)
+    alert(values);
     console.log("Form submitted with values:", values);
     // Customize this function to make an API call to the backend with the form data
     // apiCall(values).then(() => {
@@ -71,10 +71,8 @@ const AddProductModal = ({ onClose }) => {
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
-            <div className=" p-5 border-b border-solid border-blueGray-200 rounded-t">
-              <div className="text-3xl font-semibold text-center">
-                Add Product
-              </div>
+            <div className="flex items-start justify-center p-5 border-b border-solid border-blueGray-200 rounded-t">
+              Add Product
             </div>
             {/*body*/}
             <form onSubmit={formik.handleSubmit}>
