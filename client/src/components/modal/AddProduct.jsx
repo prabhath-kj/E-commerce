@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import productApi from "../../api/productApi";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 const AddProductModal = ({ onClose }) => {
   const [previewImages, setPreviewImages] = useState([]);
+  const [images, setImages] = useState([]);
   const [imageError, setImageError] = useState(null);
-  const categories = ["Laptop", "Tablets", "HeadPhones"];
+  const Subcategories = useSelector((state) => state.categories.subCategory);
+  const [isAddingProduct, setIsAddingProduct] = useState(false); // New state for loading
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
@@ -19,35 +24,43 @@ const AddProductModal = ({ onClose }) => {
     subcategoryId: Yup.string().required("Subcategory is required"),
     description: Yup.string().required("Description is required"),
     images: Yup.array()
-      .min(1, "At least one image is required")
+      .required("Please provide image")
       .max(3, "Only up to 3 images allowed"),
   });
 
-  const onSubmit = (values) => {
-    alert(values);
-    console.log("Form submitted with values:", values);
-    // Customize this function to make an API call to the backend with the form data
-    // apiCall(values).then(() => {
-    //   onClose();
-    // });
-  };
+  const onSubmit = async (values) => {
+    try {
+      setIsAddingProduct(true);
+      // Create a new FormData object
+      const formData = new FormData();
 
-  const handleImageChange = (event) => {
-    const files = event.target.files;
+      // Append form data to the FormData object
+      formData.append("title", values.title);
+      formData.append("price", values.price);
+      formData.append("quantity", values.quantity);
+      formData.append("subcategoryId", values.subcategoryId);
+      formData.append("description", values.description);
 
-    if (files.length > 3) {
-      setImageError("Only up to 3 images are allowed");
-    } else {
-      setImageError(null);
-
-      setPreviewImages([]);
-      Array.from(files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setPreviewImages((prevImages) => [...prevImages, e.target.result]);
-        };
-        reader.readAsDataURL(file);
+      // Append each image file to the FormData object
+      images.forEach((image) => {
+        formData.append(`images`, image);
       });
+
+      try {
+        const response = await productApi.addProduct(formData);
+        console.log(response);
+        toast.success("Product added successfully");
+        onClose();
+      } catch (error) {
+        toast.error("Failed to add Product. Please try again.");
+        console.error("API error:", error);
+      }
+
+      onClose();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsAddingProduct(false);
     }
   };
 
@@ -64,6 +77,28 @@ const AddProductModal = ({ onClose }) => {
     onSubmit,
   });
 
+  const handleImageChange = (event) => {
+    const files = event.target.files;
+
+    if (files.length > 3) {
+      setImageError("Only up to 3 images are allowed");
+    } else {
+      setImageError(null);
+
+      setPreviewImages([]);
+
+      Array.from(files).forEach((file) => {
+        setImages((prev) => [...prev, file]);
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          setPreviewImages((prevImages) => [...prevImages, e.target.result]);
+        };
+        reader.readAsDataURL(file);
+        formik.setFieldValue("images", [...formik.values.images, file]);
+      });
+    }
+  };
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -161,9 +196,9 @@ const AddProductModal = ({ onClose }) => {
                     className="mt-1 p-2 border rounded-md w-full"
                   >
                     <option value="" label="Select a subcategory" />
-                    {categories.map((category) => (
-                      <option key={category} value={category}>
-                        {category}
+                    {Subcategories.map(({ subcategoryName, _id }) => (
+                      <option key={_id} value={_id}>
+                        {subcategoryName}
                       </option>
                     ))}
                   </select>
@@ -240,12 +275,13 @@ const AddProductModal = ({ onClose }) => {
                   type="submit"
                   className="bg-orange-400 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 >
-                  Add
+                  {isAddingProduct ? "Adding..." : "Add"}
                 </button>
                 <button
                   type="button"
                   className="bg-gray-300  text-red-500 background-transparent font-bold uppercase rounded px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   onClick={onClose}
+                  disabled={isAddingProduct}
                 >
                   Discard
                 </button>

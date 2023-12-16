@@ -1,15 +1,22 @@
 import React, { useState } from "react";
+import { setSubCategory } from "../../redux/slices/categorySlice";
+import {useDispatch} from "react-redux"
+import productApi from "../../api/productApi";
 
 const Sidebar = ({ categories }) => {
+  const dispatch =useDispatch()
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
 
   const fetchSubcategories = async (categoryId) => {
-    // Replace this with your actual API call to fetch subcategories based on categoryId
-    // const response = await apiCallToFetchSubcategories(categoryId);
-    // setSubcategories(response.data);
-    // Note: Make sure to handle errors and loading states appropriately
-    setSubcategories(["Subcategory 1", "Subcategory 2"]); // Placeholder data
+    try {
+      const response = await productApi.fetchSubCategories(categoryId);
+      setSubcategories(response);
+      dispatch(setSubCategory(response))
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
   const handleCategoryClick = async (categoryId) => {
@@ -20,6 +27,13 @@ const Sidebar = ({ categories }) => {
       setExpandedCategory(categoryId);
       await fetchSubcategories(categoryId);
     }
+  };
+
+  const handleSubcategorySelect = (subcategory) => {
+    setSelectedSubcategory(subcategory);
+    // Perform product filtering based on the selected subcategory
+    // You can dispatch an action to update the product list in Redux state
+    // or perform the filtering logic directly in the component
   };
 
   return (
@@ -33,8 +47,23 @@ const Sidebar = ({ categories }) => {
             </strong>
             {expandedCategory === _id && (
               <ul>
-                {subcategories.map((subcategory, subIndex) => (
-                  <li key={subIndex}>{subcategory}</li>
+                {subcategories.map(({ subcategoryName, _id }) => (
+                  <li key={_id}>
+                    <label className="flex uppercase">
+                      <input
+                        type="checkbox"
+                        style={{
+                          background: "black",
+                          width: "20px", // Set the desired width
+                          height: "20px", // Set the desired height
+                        }}
+                        className="mr-2"
+                        checked={selectedSubcategory === _id}
+                        onChange={() => handleSubcategorySelect(_id)}
+                      />
+                      {subcategoryName}
+                    </label>
+                  </li>
                 ))}
               </ul>
             )}

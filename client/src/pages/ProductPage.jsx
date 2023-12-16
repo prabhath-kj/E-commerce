@@ -1,13 +1,19 @@
-import React from 'react'
-import {useParams} from "react-router-dom"
+import React from "react";
+import ProductDetails from "../components/product/ProductItem";
+import Breadcrumb from "../components/common/Breadcrumb";
+import { useParams } from "react-router-dom";
 
 const ProductPage = () => {
-    const {fileName} =useParams()
-  return (
-    <div>
-      {fileName}
-    </div>
-  )
-}
+  const path = "Home > Product details";
 
-export default ProductPage
+  const { fileName } = useParams();
+  return (
+    <div className="mt-20">
+      <Breadcrumb path={path} />
+      {fileName}
+      <ProductDetails />
+    </div>
+  );
+};
+
+export default ProductPage;

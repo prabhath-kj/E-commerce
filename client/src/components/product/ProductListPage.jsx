@@ -7,7 +7,7 @@ import { setCategories } from "../../redux/slices/categorySlice";
 
 const ProductListPage = () => {
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories);
+  const categories = useSelector((state) => state.categories.category);
   // const products = useSelector((state) => state.products);
 
   useEffect(() => {

@@ -6,6 +6,8 @@ import helmet from "helmet";
 import connectDB from "./config/dbConfig.js";
 import categoryRoutes from "./routes/categoryRoutes.js"
 import subCategoriesRoutes from "./routes/subcategoryRoutes.js"
+import productsRoutes from "./routes/productRoutes.js"
+
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -31,6 +33,7 @@ app.use(morgan("short"));
 // Routes
 app.use("/api/category",categoryRoutes)
 app.use("/api/subcategory",subCategoriesRoutes)
+app.use("/api/products",productsRoutes)
 
 
 export default app;

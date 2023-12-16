@@ -1,12 +1,13 @@
 import { Schema, model } from "mongoose";
 
 const productSchema = new Schema({
-  name: {
+  title: {
     type: String,
+    unique: true,
     required: true,
   },
-  subCategory: {
-    type: mongoose.Schema.Types.ObjectId,
+  subcategoryId: {
+    type: Schema.Types.ObjectId,
     ref: "SubCategory",
     required: true,
   },
@@ -18,13 +19,17 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
-  quntity: {
+  quantity: {
     type: Number,
     required: true,
   },
   images: {
     type: [String],
-    default: [],
+    default: [
+      "https://t3.ftcdn.net/jpg/03/45/05/92/240_F_345059232_CPieT8RIWOUk4JqBkkWkIETYAkmz2b75.jpg",
+      "https://t3.ftcdn.net/jpg/03/45/05/92/240_F_345059232_CPieT8RIWOUk4JqBkkWkIETYAkmz2b75.jpg",
+      "https://t3.ftcdn.net/jpg/03/45/05/92/240_F_345059232_CPieT8RIWOUk4JqBkkWkIETYAkmz2b75.jpg",
+    ],
   },
 });
 
