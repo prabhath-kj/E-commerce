@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import OrangeButton from "../common/OrangeButton";
+import { buttonNames } from "../../constants";
 import AddCategoryModal from "../modal/AddCategory";
 import AddProductModal from "../modal/AddProduct";
 import AddSubcategoryModal from "../modal/AddSubCategory";
 
-const ProductList = ({ products }) => {
+const ProductList = ({categories}) => {
   const [modalType, setModalType] = useState(null);
-
-  const buttonNames = ["Add Category", "Add Sub Category", "Add Product"];
 
 
   const closeModal = () => {
@@ -20,7 +19,7 @@ const ProductList = ({ products }) => {
       case "add-category":
         return <AddCategoryModal onClose={closeModal} />;
       case "add-sub category":
-        return <AddSubcategoryModal onClose={closeModal} />;
+        return <AddSubcategoryModal onClose={closeModal} categories={categories} />;
       case "add-product":
         return <AddProductModal onClose={closeModal} />;
       default:
@@ -42,7 +41,7 @@ const ProductList = ({ products }) => {
       </div>
       <h2 className="text-lg font-semibold mb-5">Products</h2>
       <div className="grid grid-cols-2 gap-4">
-        {products.map((product) => (
+        {/* {products.map((product) => (
           <div key={product.id} className="border">
             <div className="flex justify-end">
               <HeartIcon className="h-6 w-6" />
@@ -70,7 +69,7 @@ const ProductList = ({ products }) => {
               ))}
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );

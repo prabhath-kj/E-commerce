@@ -1,19 +1,24 @@
 import React from "react";
 import { useFormik } from "formik";
+import productApi from "../../api/productApi";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 
-const AddSubcategoryModal = ({ onClose }) => {
+const AddSubcategoryModal = ({ onClose, categories }) => {
   const validationSchema = Yup.object().shape({
     categoryId: Yup.string().required("Category is required"),
     subcategoryName: Yup.string().required("Subcategory Name is required"),
   });
 
-  const onSubmit = (values) => {
-    console.log("Form submitted with values:", values);
-    // Customize this function to make an API call to the backend with the form data
-    // apiCall(values).then(() => {
-    //   onClose();
-    // });
+  const onSubmit = async (values) => {
+    try {
+      const response = await productApi.addSubcategory(values);
+      toast.success("Subcategory added successfully");
+      onClose();
+    } catch (error) {
+      toast.error("Failed to add category. Please try again.");
+      console.error("API error:", error);
+    }
   };
 
   const formik = useFormik({
@@ -24,8 +29,6 @@ const AddSubcategoryModal = ({ onClose }) => {
     validationSchema,
     onSubmit,
   });
-
-  const categories = ["Laptop", "Tablets", "HeadPhones"];
 
   return (
     <>
@@ -56,9 +59,9 @@ const AddSubcategoryModal = ({ onClose }) => {
                     className="mt-1 p-2 border rounded-md w-full"
                   >
                     <option value="" label="Select a category" />
-                    {categories.map((category) => (
-                      <option key={category} value={category}>
-                        {category}
+                    {categories.map(({ categoryName, _id }) => (
+                      <option key={_id} value={_id}>
+                        {categoryName}
                       </option>
                     ))}
                   </select>

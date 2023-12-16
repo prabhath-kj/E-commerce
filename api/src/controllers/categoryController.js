@@ -1,7 +1,7 @@
 // controllers/categoryController.js
 import Category from "../models/categorySchema.js";
 
-const addCategory = async (req, res) => {
+export const addCategory = async (req, res) => {
   const { categoryName } = req.body;
   try {
     // Check if request body is empty
@@ -34,4 +34,13 @@ const addCategory = async (req, res) => {
   }
 };
 
-export default addCategory;
+export const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.json(categories);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+

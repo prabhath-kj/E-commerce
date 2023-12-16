@@ -1,85 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../common/SideBar";
 import ProductList from "./ProductList";
+import productApi from "../../api/productApi";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategories } from "../../redux/slices/categorySlice";
 
 const ProductListPage = () => {
-  const categories = [
-    {
-      name: "Electronics",
-      subcategories: [
-        {
-          name: "Laptops",
-          products: [
-            {
-              id: 1,
-              name: "Laptop 1",
-              rating: 4.5,
-              image:
-                "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcS3o1zmQ3OAuzaHG2uhUy26NPjIieWJhKhj7UG2dgeaCmL2_XJxuoh0RMCDLAHY1VJFBDbJvqvA5fI2y2CrZ45NajV4FnCx533YWizesNGgNOJI0RENjeQNYg&usqp=CAc",
-            },
-            {
-              id: 2,
-              name: "Laptop 2",
-              rating: 4.5,
-              image:
-                "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcS3o1zmQ3OAuzaHG2uhUy26NPjIieWJhKhj7UG2dgeaCmL2_XJxuoh0RMCDLAHY1VJFBDbJvqvA5fI2y2CrZ45NajV4FnCx533YWizesNGgNOJI0RENjeQNYg&usqp=CAc",
-            },
-          ],
-        },
-        {
-          name: "Tablets",
-          products: [
-            { id: 3, name: "Tablet 1", rating: 4.0 },
-            { id: 4, name: "Tablet 2", rating: 3.8 },
-          ],
-        },
-        {
-          name: "Headphones",
-          products: [
-            { id: 5, name: "Headphone 1", rating: 3.5 },
-            { id: 6, name: "Headphone 2", rating: 4.1 },
-          ],
-        },
-      ],
-    },
-    // Add more categories as needed
-  ];
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.categories);
+  // const products = useSelector((state) => state.products);
 
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  useEffect(() => {
+    // Fetch categories from the backend
+    const fetchCategories = async () => {
+      try {
+        const response = await productApi.fetchCategories();
+        dispatch(setCategories(response));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
-  const handleCategoryClick = (categoryIndex) => {
-    setSelectedCategory(categoryIndex);
-    setSelectedSubcategory(null);
-  };
+    // Fetch all products from the backend
+    // const fetchProducts = async () => {
+    //   try {
+    //     const response = await axios.get("/api/products"); // Replace with your backend API endpoint
+    //     dispatch(setProducts(response.data));
+    //   } catch (error) {
+    //     console.error("Error fetching products:", error);
+    //     // Handle the error if needed
+    //   }
+    // };
 
-  const handleSubcategoryClick = (subcategoryIndex) => {
-    setSelectedSubcategory(subcategoryIndex);
-  };
-
-  // ... (rest of your existing code)
+    fetchCategories();
+    // fetchProducts();
+  }, [dispatch]);
 
   return (
     <div className="flex">
-      <Sidebar
-        categories={categories}
-        onCategoryClick={handleCategoryClick}
-        onSubcategoryClick={handleSubcategoryClick}
-      />
-      <ProductList
-        products={categories
-          .filter(
-            (category, index) =>
-              selectedCategory === null || selectedCategory === index
-          )
-          .flatMap((category) =>
-            category.subcategories.flatMap((subcategory, subIndex) =>
-              selectedSubcategory === null || selectedSubcategory === subIndex
-                ? subcategory.products
-                : []
-            )
-          )}
-      />
+      <Sidebar categories={categories} />
+      <ProductList categories={categories}/>
     </div>
   );
 };

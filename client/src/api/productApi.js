@@ -12,7 +12,10 @@ const productApi = {
 
   addCategory: async (categoryData) => {
     try {
-      const response = await instance.post("/category/categories", categoryData);
+      const response = await instance.post(
+        "/category/categories",
+        categoryData
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -21,7 +24,19 @@ const productApi = {
 
   addSubcategory: async (subcategoryData) => {
     try {
-      const response = await instance.post("/subcategories", subcategoryData);
+      const response = await instance.post(
+        "/subcategory/subcategories",
+        subcategoryData
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  fetchCategories: async () => {
+    try {
+      const response = await instance.get("/category/categories");
       return response.data;
     } catch (error) {
       throw error;

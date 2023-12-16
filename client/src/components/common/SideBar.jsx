@@ -1,30 +1,40 @@
 import React, { useState } from "react";
 
-const Sidebar = ({ categories, onSelectCategory, onSelectSubcategory }) => {
+const Sidebar = ({ categories }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [subcategories, setSubcategories] = useState([]);
 
-  const handleCategoryClick = (categoryIndex) => {
-    setExpandedCategory((prev) => (prev === categoryIndex ? null : categoryIndex));
-    onSelectCategory(categoryIndex);
+  const fetchSubcategories = async (categoryId) => {
+    // Replace this with your actual API call to fetch subcategories based on categoryId
+    // const response = await apiCallToFetchSubcategories(categoryId);
+    // setSubcategories(response.data);
+    // Note: Make sure to handle errors and loading states appropriately
+    setSubcategories(["Subcategory 1", "Subcategory 2"]); // Placeholder data
+  };
+
+  const handleCategoryClick = async (categoryId) => {
+    if (expandedCategory === categoryId) {
+      setExpandedCategory(null);
+      setSubcategories([]);
+    } else {
+      setExpandedCategory(categoryId);
+      await fetchSubcategories(categoryId);
+    }
   };
 
   return (
     <div className="w-1/4 px-2 text-left">
       <h2 className="text-lg font-semibold mb-4">Categories</h2>
       <ul>
-        {categories.map((category, index) => (
-          <li key={index} className="mb-2">
-            <strong onClick={() => handleCategoryClick(index)}>
-              {category.name}
+        {categories.map(({ categoryName, _id }) => (
+          <li key={_id} className="mb-2 cursor-pointer">
+            <strong onClick={() => handleCategoryClick(_id)}>
+              {categoryName + " >"}
             </strong>
-            {category.subcategories && expandedCategory === index && (
+            {expandedCategory === _id && (
               <ul>
-                {category.subcategories.map((subcategory, subIndex) => (
-                  <li key={subIndex}>
-                    <strong onClick={() => onSelectSubcategory(subcategory)}>
-                      {subcategory.name}
-                    </strong>
-                  </li>
+                {subcategories.map((subcategory, subIndex) => (
+                  <li key={subIndex}>{subcategory}</li>
                 ))}
               </ul>
             )}
