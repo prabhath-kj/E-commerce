@@ -1,6 +1,14 @@
 import instance from "./axiosInstance";
 
 const productApi = {
+  getProducts:async (page) => {
+    try {
+      const response = await instance.get(`/products?page=${page}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   addProduct: async (productData) => {
     try {
       const response = await instance.post("/products/addProduct", productData);

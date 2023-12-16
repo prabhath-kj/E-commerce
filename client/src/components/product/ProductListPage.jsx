@@ -21,19 +21,9 @@ const ProductListPage = () => {
       }
     };
 
-    // Fetch all products from the backend
-    // const fetchProducts = async () => {
-    //   try {
-    //     const response = await axios.get("/api/products"); // Replace with your backend API endpoint
-    //     dispatch(setProducts(response.data));
-    //   } catch (error) {
-    //     console.error("Error fetching products:", error);
-    //     // Handle the error if needed
-    //   }
-    // };
+    
 
     fetchCategories();
-    // fetchProducts();
   }, [dispatch]);
 
   return (

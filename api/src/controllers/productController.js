@@ -21,7 +21,7 @@ const addProduct = async (req, res) => {
         return result.secure_url;
       })
     );
-    console.log(imageUrls)
+    console.log(imageUrls);
     const newProduct = new Product({ ...req.body, images: imageUrls });
 
     const savedProduct = await newProduct.save();
@@ -43,4 +43,38 @@ const addProduct = async (req, res) => {
   }
 };
 
-export { addProduct };
+const getPaginatedProducts = async (req, res) => {
+  try {
+    // Destructuring the query parameters from the request URL
+    const { page = 1, pageSize = 6 } = req.query;
+
+    // Parsing the page and pageSize variables as integers with a default radix of 10
+    const parsedPage = parseInt(page, 10);
+    const parsedPageSize = parseInt(pageSize, 10);
+
+    // Calculating the start and end index for the slice of products to fetch
+    const startIndex = (parsedPage - 1) * parsedPageSize;
+    const endIndex = startIndex + parsedPageSize;
+
+    // Counting the total number of products in the database
+    const totalProducts = await Product.countDocuments();
+
+    // Calculating the total number of pages based on the pageSize
+    const totalPages = Math.ceil(totalProducts / parsedPageSize);
+
+    // Fetching the products for the current page using skip and limit
+    const paginatedProducts = await Product.find({})
+      .skip(startIndex)
+      .limit(parsedPageSize);
+
+    res.json({
+      paginatedProducts,
+    });
+  } catch (error) {
+    // Handling errors and sending a 500 Internal Server Error response
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export { addProduct, getPaginatedProducts };
