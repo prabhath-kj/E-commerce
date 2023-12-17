@@ -1,17 +1,16 @@
 import multer from "multer";
 import path from "path";
 
-export default multer({
-  storage: multer.diskStorage({}),
-  limits: {
-    files: 4,
-    fileSize: 1024 * 1024 * 5,
-  },
-  fileFilter: (req, file, cb) => {
-    let ext = path.extname(file.originalname);
-    if (![".jpg", ".jpeg", ".png", ".webp"].includes(ext)) {
-      cb(new Error("file type is not supported"), false);
-    }
-    cb(null, true);
-  },
-});
+const storage = multer.diskStorage({});
+
+const fileFilter = (req, file, cb) => {
+  let ext = path.extname(file.originalname);
+  if (![".jpg", ".jpeg", ".png", ".webp"].includes(ext)) {
+    cb(new Error("file type is not supported"), false);
+  }
+  cb(null, true);
+};
+
+const upload = multer({ storage: storage, fileFilter });
+
+export default upload;
