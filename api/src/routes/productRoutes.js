@@ -1,5 +1,5 @@
 import express from "express";
-import multer from "../services/upload.js";
+import uploadMiddileware from "../middlewares/uploadMiddileware.js";
 import {authenticateJWT} from "../middlewares/jwtMiddleware.js"
 import {
   addProduct,
@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/", getPaginatedProducts);
 router.get("/:productId", getSingleProduct);
 router.post("/searchProduct", searchProduct);
-router.post("/addProduct",authenticateJWT, multer.array ("images", 3), addProduct);
+router.post("/addProduct",authenticateJWT, uploadMiddileware.array ("images", 3), addProduct);
 router.get("/wishList/:productId",authenticateJWT, modifyWishlist);
 
 

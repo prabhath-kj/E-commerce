@@ -9,10 +9,9 @@ export default multer({
   },
   fileFilter: (req, file, cb) => {
     let ext = path.extname(file.originalname);
-    if (![".jpg",".jpeg",".png",".webp"].includes(ext)) {
+    if (![".jpg", ".jpeg", ".png", ".webp"].includes(ext)) {
       cb(new Error("file type is not supported"), false);
     }
     cb(null, true);
   },
 });
-
