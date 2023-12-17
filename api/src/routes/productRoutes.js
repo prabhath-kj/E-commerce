@@ -1,5 +1,5 @@
 import express from "express";
-import upload from "../middlewares/uploadMiddileware.js";
+import upload from "../middlewares/uploadMiddileware.mjs";
 import {authenticateJWT} from "../middlewares/jwtMiddleware.js"
 import {
   addProduct,
