@@ -8,7 +8,7 @@ const subCategorySchema = new Schema({
     lowercase:true,
   },
   category: {
-    type: Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Category',
     required: true,
   },
