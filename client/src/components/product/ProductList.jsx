@@ -2,23 +2,23 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import OrangeButton from "../common/OrangeButton";
 import { buttonNames } from "../../constants";
-import { setProducts,addProduct } from "../../redux/slices/productSlice";
+import { setProducts, addProduct } from "../../redux/slices/productSlice";
 import { useSelector, useDispatch } from "react-redux";
 import AddCategoryModal from "../modal/AddCategory";
 import AddProductModal from "../modal/AddProduct";
 import AddSubcategoryModal from "../modal/AddSubCategory";
 import productApi from "../../api/productApi";
 
-const ProductList = ({ categories }) => {
+const ProductList = ({ categories, filter }) => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.products.products);
-  // const [products, setProducts] = useState([]);
+  // const products = useSelector((state) => state.products.products);
+  const [products, setProducts] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [modalType, setModalType] = useState(null);
   const [page, setPage] = useState(1);
   const reference = useRef(null);
   const [hasMore, setHasMore] = useState(true);
 
-  console.log(products);
   const closeModal = () => {
     setModalType(null);
   };
@@ -27,7 +27,7 @@ const ProductList = ({ categories }) => {
     switch (modalType) {
       case "add-category":
         return <AddCategoryModal onClose={closeModal} />;
-      case "add-sub-category":
+      case "add-subcategory":
         return (
           <AddSubcategoryModal onClose={closeModal} categories={categories} />
         );
@@ -50,14 +50,14 @@ const ProductList = ({ categories }) => {
 
   const fetchProducts = async () => {
     try {
-      const { paginatedProducts: newProducts } = await productApi.getProducts(
-        page
-      );
+      const { paginatedProducts: newProducts, totalPages } =
+        await productApi.getProducts(page);
       if (newProducts.length === 0) {
         setHasMore(false);
       } else {
-        dispatch(setProducts(newProducts));
-        // setProducts((prev) => [...prev, ...newProducts]);
+        // dispatch(setProducts(newProducts));
+        setTotalPages(totalPages);
+        setProducts((prev) => [...prev, ...newProducts]);
         setPage((prev) => prev + 1);
       }
     } catch (error) {
@@ -79,11 +79,15 @@ const ProductList = ({ categories }) => {
     };
   }, [products, onIntersection]);
 
+  const filteredProducts =
+    filter === ""
+      ? products
+      : products.filter((product) => product.subcategoryId === filter);
+
   return (
     <>
       <div className="w-3/4 relative">
         {renderModal()}
-
         <div className="absolute top-0 right-0">
           {buttonNames.map((name, index) => (
             <OrangeButton key={index} setModalType={setModalType}>
@@ -91,9 +95,11 @@ const ProductList = ({ categories }) => {
             </OrangeButton>
           ))}
         </div>
-        <h2 className="text-lg font-semibold mb-5">Products</h2>
+        <h2 className="text-lg font-semibold mb-5">
+          {filter ? "Products" : `Total Pages ${totalPages}`}
+        </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-2 pr-2">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product._id} className="border rounded overflow-hidden">
               <div className="relative">
                 <img

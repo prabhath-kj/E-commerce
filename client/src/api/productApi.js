@@ -1,9 +1,9 @@
 import instance from "./axiosInstance";
 
 const productApi = {
-  getProducts:async (page) => {
+  getProducts: async (payload) => {
     try {
-      const response = await instance.get(`/products?page=${page}`);
+      const response = await instance.get(`/products?page=${payload}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -45,6 +45,14 @@ const productApi = {
   fetchCategories: async () => {
     try {
       const response = await instance.get("/category/categories");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  fetchAllSubCategories: async () => {
+    try {
+      const response = await instance.get(`/subcategory`);
       return response.data;
     } catch (error) {
       throw error;

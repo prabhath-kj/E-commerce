@@ -46,7 +46,7 @@ const addProduct = async (req, res) => {
 const getPaginatedProducts = async (req, res) => {
   try {
     // Destructuring the query parameters from the request URL
-    const { page = 1, pageSize = 6 } = req.query;
+    const { page = 1, pageSize = 6, subcategory = "" } = req.query;
 
     // Parsing the page and pageSize variables as integers with a default radix of 10
     const parsedPage = parseInt(page, 10);
@@ -56,19 +56,23 @@ const getPaginatedProducts = async (req, res) => {
     const startIndex = (parsedPage - 1) * parsedPageSize;
     const endIndex = startIndex + parsedPageSize;
 
-    // Counting the total number of products in the database
-    const totalProducts = await Product.countDocuments();
+    // Build a filter object based on the presence of subcategory
+    const filter = subcategory == false ? {} : { subcategoryId: subcategory };
+
+    // Counting the total number of products based on the filter
+    const totalProducts = await Product.countDocuments(filter);
 
     // Calculating the total number of pages based on the pageSize
     const totalPages = Math.ceil(totalProducts / parsedPageSize);
 
-    // Fetching the products for the current page using skip and limit
-    const paginatedProducts = await Product.find({})
+    // Fetching the products for the current page using skip and limit, applying the filter
+    const paginatedProducts = await Product.find(filter)
       .skip(startIndex)
       .limit(parsedPageSize);
 
     res.json({
       paginatedProducts,
+      totalPages,
     });
   } catch (error) {
     // Handling errors and sending a 500 Internal Server Error response

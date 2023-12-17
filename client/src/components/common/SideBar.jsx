@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { setSubCategory } from "../../redux/slices/categorySlice";
-import {useDispatch} from "react-redux"
+
 import productApi from "../../api/productApi";
 
-const Sidebar = ({ categories }) => {
-  const dispatch =useDispatch()
+const Sidebar = ({ categories, handleFilter }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -13,13 +11,14 @@ const Sidebar = ({ categories }) => {
     try {
       const response = await productApi.fetchSubCategories(categoryId);
       setSubcategories(response);
-      dispatch(setSubCategory(response))
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
   };
 
   const handleCategoryClick = async (categoryId) => {
+    handleFilter("");
+    setSelectedSubcategory(null)
     if (expandedCategory === categoryId) {
       setExpandedCategory(null);
       setSubcategories([]);
@@ -31,9 +30,7 @@ const Sidebar = ({ categories }) => {
 
   const handleSubcategorySelect = (subcategory) => {
     setSelectedSubcategory(subcategory);
-    // Perform product filtering based on the selected subcategory
-    // You can dispatch an action to update the product list in Redux state
-    // or perform the filtering logic directly in the component
+    handleFilter(subcategory);
   };
 
   return (

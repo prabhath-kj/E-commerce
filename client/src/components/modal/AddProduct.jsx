@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import productApi from "../../api/productApi";
+import { setSubCategory } from "../../redux/slices/categorySlice";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
+import { useEffect } from "react";
 
 const AddProductModal = ({ onClose }) => {
+  const dispatch =useDispatch()
   const [previewImages, setPreviewImages] = useState([]);
   const [images, setImages] = useState([]);
   const [imageError, setImageError] = useState(null);
@@ -99,6 +103,21 @@ const AddProductModal = ({ onClose }) => {
       });
     }
   };
+
+  const fetchAllSubcategories = async () => {
+    try {
+      const response = await productApi.fetchAllSubCategories();
+      dispatch(setSubCategory(response));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+
+useEffect(() => {
+  fetchAllSubcategories()
+}, [])
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">

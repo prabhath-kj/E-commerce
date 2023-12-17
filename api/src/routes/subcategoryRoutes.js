@@ -1,12 +1,17 @@
 // routes/subcategoryRoutes.js
-import express from 'express';
-import { addSubcategory,getSubcategory } from '../controllers/subcategoryController.js';
+import express from "express";
+import {
+  addSubcategory,
+  getSubcategory,
+  getAllSubcategory,
+} from "../controllers/subcategoryController.js";
 
 const router = express.Router();
 
-// Add a new subcategory
-router.post('/subcategories', addSubcategory);
-router.get('/:categoryId', getSubcategory);
+router.get("/", getAllSubcategory);
 
+router.get("/:categoryId", getSubcategory);
+
+router.post("/subcategories", addSubcategory);
 
 export default router;

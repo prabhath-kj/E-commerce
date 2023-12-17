@@ -36,6 +36,18 @@ const addSubcategory = async (req, res) => {
   }
 };
 
+const getAllSubcategory = async (req, res) => {
+  try {
+
+    // Fetch subcategories based on categoryId
+    const subcategories = await Subcategory.find({});
+    res.json(subcategories);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const getSubcategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
@@ -49,4 +61,4 @@ const getSubcategory = async (req, res) => {
   }
 };
 
-export { addSubcategory, getSubcategory };
+export { addSubcategory, getSubcategory,getAllSubcategory };

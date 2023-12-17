@@ -1,1 +1,1 @@
-export  const buttonNames = ["Add Category", "Add Sub Category", "Add Product"];
+export  const buttonNames = ["Add Category", "Add SubCategory", "Add Product"];

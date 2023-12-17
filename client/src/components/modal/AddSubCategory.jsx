@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 const AddSubcategoryModal = ({ onClose, categories }) => {
+  console.log("hiii")
   const validationSchema = Yup.object().shape({
     categoryId: Yup.string().required("Category is required"),
     subcategoryName: Yup.string().required("Subcategory Name is required"),

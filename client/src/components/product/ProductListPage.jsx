@@ -8,6 +8,7 @@ import { setCategories } from "../../redux/slices/categorySlice";
 const ProductListPage = () => {
   const dispatch = useDispatch();
   const categories = useSelector((state) => state.categories.category);
+  const [filter,setFilter]=useState('')
   // const products = useSelector((state) => state.products);
 
   useEffect(() => {
@@ -26,10 +27,13 @@ const ProductListPage = () => {
     fetchCategories();
   }, [dispatch]);
 
+  const handleFilter=(subcategory)=>{
+    setFilter(subcategory)
+  }
   return (
     <div className="flex">
-      <Sidebar categories={categories} />
-      <ProductList categories={categories}/>
+      <Sidebar categories={categories} handleFilter={handleFilter} />
+      <ProductList categories={categories} filter={filter}/>
     </div>
   );
 };
