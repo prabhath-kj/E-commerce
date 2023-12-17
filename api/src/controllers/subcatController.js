@@ -1,4 +1,4 @@
-import SubCategory from "../models/subcategorySchema.js";
+import SubCategorySchema from "../models/subCategory.js";
 
 const addSubcategory = async (req, res) => {
   const { categoryId, subcategoryName } = req.body;
@@ -9,7 +9,7 @@ const addSubcategory = async (req, res) => {
     }
 
     // Check if the subcategory already exists
-    const existingSubcategory = await SubCategory.findOne({
+    const existingSubcategory = await SubCategorySchema.findOne({
       category: categoryId,
       subcategoryName: subcategoryName.toLowerCase(),
     });

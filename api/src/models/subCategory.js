@@ -1,6 +1,6 @@
-import { Schema, model,Types } from "mongoose";
+import { Schema, model } from "mongoose";
 
-const subCategorySchema = new Schema({
+const subCategory = new Schema({
   subcategoryName: {
     type: String,
     required: true,
@@ -14,6 +14,6 @@ const subCategorySchema = new Schema({
   },
 });
 
-const SubCategory = model('SubCategory', subCategorySchema);
+const SubCategorySchema = model('SubCategory', subCategory);
 
-export default SubCategory;
+export default SubCategorySchema;

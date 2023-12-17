@@ -4,7 +4,7 @@ import {
   addSubcategory,
   getSubcategory,
   getAllSubcategory,
-} from "../controllers/subcategoryController.js";
+} from "../controllers/subcatController.js";
 import {authenticateJWT} from "../middlewares/jwtMiddleware.js"
 
 
