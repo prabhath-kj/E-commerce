@@ -82,7 +82,6 @@ const getPaginatedProducts = async (req, res) => {
 };
 
 const getSingleProduct = async (req, res) => {
-  const { productId } = req.params;
   try {
     const { productId } = req.params;
 
@@ -99,4 +98,29 @@ const getSingleProduct = async (req, res) => {
   }
 };
 
-export { addProduct, getPaginatedProducts, getSingleProduct };
+const searchProduct = async (req, res) => {
+  try {
+    const query = req.body.query;
+
+    if (!query) {
+      return res
+        .status(200)
+        .json({ message: "Query parameter 'query' required" });
+    }
+
+
+    const products = await Product.find({
+      title: { $regex: query, $options: "i" },
+    }).exec();
+
+    if (products.length === 0) {
+      return res.status(200).json(products);
+    }
+
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export { addProduct, getPaginatedProducts, getSingleProduct, searchProduct };

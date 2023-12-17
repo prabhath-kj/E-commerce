@@ -18,6 +18,17 @@ const productApi = {
       throw error;
     }
   },
+  searchProduct: async (productData) => {
+    try {
+      const response = await instance.post(
+        `/products/searchProduct`,
+        productData
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
   addProduct: async (productData) => {
     try {

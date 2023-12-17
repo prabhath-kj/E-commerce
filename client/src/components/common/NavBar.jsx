@@ -1,37 +1,56 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import WishList from "./WishList";
-import {
-  HeartIcon,
-  ShoppingCartIcon,
-  UserIcon,
-} from "@heroicons/react/24/solid"; // Import wishlist, cart, and user icons
+import { NAV_TITLES } from "../../constants";
+import { useNavigate } from "react-router-dom";
+import productApi from "../../api/productApi";
 import React from "react";
 
 const Navbar = () => {
+  const router = useNavigate();
   const [isOpen, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [hideSuggestions, setHideSuggestions] = useState(false);
+  const [suggestion, setSuggestion] = useState([]);
+  const inputRef = useRef();
+  console.log(suggestion, searchQuery);
 
-  const titles = [
-    {
-      title: "Wishlist",
-      icon: HeartIcon,
-      count: 3, // Example count for wishlist
-    },
-    {
-      title: "User",
-      icon: UserIcon,
-    },
-    // {
-    //   title: "Sign In",
-    //   path: "#login",
-    // },
-    {
-      title: "Cart",
-      icon: ShoppingCartIcon,
-      count: 5, // Example count for cart
-    },
-    ,
-  ];
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (inputRef.current) {
+        setHideSuggestions(false);
+        setSearchQuery("")
+      }
+    };
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery.trim() !== "") {
+        getSuggestion();
+      }
+    }, 800);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
+  const getSuggestion = async () => {
+    try {
+      const response = await productApi.searchProduct({
+        query: searchQuery,
+      });
+      setSuggestion(response);
+      setHideSuggestions(true);
+    } catch (error) {
+      console.error("Error fetching search suggestions:", error);
+    }
+  };
 
   return (
     <>
@@ -43,19 +62,48 @@ const Navbar = () => {
           >
             E COMMERCE
           </Link>
-          <div className="flex items-center">
+          <div className=" relative ">
             <input
               type="text"
               placeholder="Search any things..."
-              className="border rounded-l px-2 py-2 focus:outline-none"
+              className="border rounded-l px-2 py-2 focus:outline-none  "
+              value={searchQuery}
+              onChange={({ target }) => {
+                setSearchQuery(target.value);
+              }}
+              ref={inputRef}
             />
             <button className="border bg-orange-400 text-white rounded-r px-2 py-2">
               Search
             </button>
+            {hideSuggestions && suggestion && (
+              <ul className="absolute left-0 right-0  bg-white rounded-b-lg  text-gray-700 shadow-lg overflow-y-auto scroll-smooth scrollbar-default max-h-60">
+                {suggestion.length === 0 ? (
+                  <li className="cursor-pointer py-3 hover:bg-gray-200 rounded">
+                    <div className="flex flex-row px-1">
+                      <div className="px-2">No suggestions found</div>
+                    </div>
+                  </li>
+                ) : (
+                  suggestion.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className="cursor-pointer py-3 hover:bg-gray-200 rounded"
+                    >
+                      <Link to={`/product-detils/${suggestion?._id}`}>
+                        <div className="flex flex-row px-1">
+                          <div className="px-2">{suggestion?.title}</div>
+                        </div>
+                      </Link>
+                    </li>
+                  ))
+                )}
+              </ul>
+            )}
           </div>
           <div className="menu hidden md:block lg:block md:w-auto" id="navBar">
             <ul className="flex md:flex-row md:space-x-4">
-              {titles.map(({ title, icon: Icon, count }, index) => (
+              {NAV_TITLES?.map(({ title, icon: Icon, count }, index) => (
                 <li
                   key={index}
                   className="block py-2 pl-3 pr-4 text-black font-semibold cursor-pointer relative"
@@ -81,7 +129,7 @@ const Navbar = () => {
         </div>
       </nav>
       <div className="relative">
-        {isOpen && <WishList pages={titles} setOpen={setOpen} />}
+        {isOpen && <WishList pages={NAV_TITLES} setOpen={setOpen} />}
       </div>
     </>
   );
