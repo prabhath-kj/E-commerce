@@ -1,7 +1,7 @@
 import multer from "multer";
 import path from "path";
 
-export default multer({
+const upload =({
   storage: multer.diskStorage({}),
   limits: {
     files: 4,
@@ -16,3 +16,4 @@ export default multer({
   },
 });
 
+export default upload
