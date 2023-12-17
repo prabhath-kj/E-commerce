@@ -1,5 +1,5 @@
 import Product from "../models/productSchema.js";
-import * as cloudinary from "../middlewares/cloudinary.mjs"
+// import * as cloudinary from "../middlewares/cloudinary.mjs"
 
 const addProduct = async (req, res) => {
   try {
@@ -17,7 +17,7 @@ const addProduct = async (req, res) => {
     // Upload images to Cloudinary
     const imageUrls = await Promise.all(
       images.map(async (file) => {
-        const result = await cloudinary.uploader.upload(file.path);
+        // const result = await cloudinary.uploader.upload(file.path);
         return result.secure_url;
       })
     );
