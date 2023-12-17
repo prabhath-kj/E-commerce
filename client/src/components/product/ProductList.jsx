@@ -22,7 +22,7 @@ const ProductList = ({ categories, filter }) => {
   const closeModal = () => {
     setModalType(null);
   };
-
+  
   const renderModal = () => {
     switch (modalType) {
       case "add-category":
