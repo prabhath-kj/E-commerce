@@ -19,7 +19,7 @@ const addSubcategory = async (req, res) => {
     }
 
     // Create and save the new subcategory
-    const subcategory = new Subcategory({
+    const subcategory = new SubCategorySchema({
       category: categoryId,
       subcategoryName: subcategoryName.toLowerCase(),
     });
@@ -39,7 +39,7 @@ const getAllSubcategory = async (req, res) => {
   try {
 
     // Fetch subcategories based on categoryId
-    const subcategories = await Subcategory.find({});
+    const subcategories = await SubCategorySchema.find({});
     res.json(subcategories);
   } catch (error) {
     console.log(error);
