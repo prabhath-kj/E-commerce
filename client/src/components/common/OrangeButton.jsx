@@ -3,10 +3,12 @@ import React from "react";
 const OrangeButton = ({ setModalType, children }) => {
   return (
     <button
-      onClick={() =>
-        setModalType(`${children.toLowerCase().replace(" ", "-")}`)
-      }
-      className="bg-orange-400 text-white px-4 py-2 rounded-md hover:bg-orange-500 m-1"
+      onClick={() => {
+        setModalType
+          ? setModalType(`${children.toLowerCase().replace(" ", "-")}`)
+          : null;
+      }}
+      className="bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full m-1"
     >
       {children}
     </button>

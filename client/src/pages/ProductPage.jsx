@@ -6,12 +6,11 @@ import { useParams } from "react-router-dom";
 const ProductPage = () => {
   const path = "Home > Product details";
 
-  const { fileName } = useParams();
+  const {productName}  = useParams();
   return (
     <div className="mt-20">
       <Breadcrumb path={path} />
-      {fileName}
-      <ProductDetails />
+      <ProductDetails productId={productName} />
     </div>
   );
 };

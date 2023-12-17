@@ -4,13 +4,15 @@ import OrangeButton from "../common/OrangeButton";
 import { buttonNames } from "../../constants";
 import { setProducts, addProduct } from "../../redux/slices/productSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import AddCategoryModal from "../modal/AddCategory";
 import AddProductModal from "../modal/AddProduct";
 import AddSubcategoryModal from "../modal/AddSubCategory";
 import productApi from "../../api/productApi";
 
 const ProductList = ({ categories, filter }) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+  const router = useNavigate();
   // const products = useSelector((state) => state.products.products);
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -22,7 +24,7 @@ const ProductList = ({ categories, filter }) => {
   const closeModal = () => {
     setModalType(null);
   };
-  
+
   const renderModal = () => {
     switch (modalType) {
       case "add-category":
@@ -84,6 +86,12 @@ const ProductList = ({ categories, filter }) => {
       ? products
       : products.filter((product) => product.subcategoryId === filter);
 
+  const handleClick = (id) => {
+    console.log(id);
+    id ? router(`/product-detils/${id}`) : null;
+    return;
+  };
+
   return (
     <>
       <div className="w-3/4 relative">
@@ -103,7 +111,8 @@ const ProductList = ({ categories, filter }) => {
             <div key={product._id} className="border rounded overflow-hidden">
               <div className="relative">
                 <img
-                  className="w-full h-48 object-contain"
+                  className="w-full h-48 object-contain cursor-pointer"
+                  onClick={() => handleClick(product?._id)}
                   src={product?.images[0]}
                   alt="product"
                 />
@@ -112,7 +121,12 @@ const ProductList = ({ categories, filter }) => {
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="text-lg font-semibold mb-2">{product?.title}</h3>
+                <h3
+                  className="text-lg font-semibold mb-2 cursor-pointer"
+                  onClick={() => handleClick(product?._id)}
+                >
+                  {product?.title}
+                </h3>
                 <div className="flex items-center mb-2">
                   <span className="text-yellow-500 mr-1">{product.rating}</span>
                   {[1, 2, 3, 4, 5].map((star, index) => (

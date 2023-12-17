@@ -9,6 +9,16 @@ const productApi = {
       throw error;
     }
   },
+
+  getSingleProduct: async (productData) => {
+    try {
+      const response = await instance.get(`/products/${productData}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   addProduct: async (productData) => {
     try {
       const response = await instance.post("/products/addProduct", productData);
