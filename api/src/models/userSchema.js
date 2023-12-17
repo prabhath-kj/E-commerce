@@ -18,12 +18,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  wishlist: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
-    },
-  ],
+  wishlist: [],
 });
 
 // Hash password before saving to database

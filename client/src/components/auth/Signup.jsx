@@ -43,7 +43,7 @@ const SignUp = () => {
       );
       toast.success(message);
     } catch (err) {
-        toast.error("Please Sign Up first");
+        toast.error(err.message);
     }
   };
 

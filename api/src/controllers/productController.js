@@ -123,4 +123,40 @@ const searchProduct = async (req, res) => {
   }
 };
 
-export { addProduct, getPaginatedProducts, getSingleProduct, searchProduct };
+
+
+
+const modifyWishlist = async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    // Check if the product and user exist
+    const product = await Product.findById(productId);
+    const user = req.user
+
+    if (!product || !user) {
+      return res.status(404).json({ message: 'Product or user not found' });
+    }
+
+    // Check if the product is already in the wishlist
+    const isProductInWishlist = user.wishlist.find((product)=>product?._id==productId);
+
+    if (isProductInWishlist) {
+      // Remove the product from the user's wishlist
+      user.wishlist = user.wishlist.filter((wish) => wish._id != productId);
+      await user.save();
+      res.status(200).json({ message: 'Product removed from wishlist', user });
+    } else {
+      // Add the product to the user's wishlist
+      user.wishlist.push(product);
+      await user.save();
+      res.status(200).json({ message: 'Product added to wishlist', user });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+export { addProduct, getPaginatedProducts, getSingleProduct, searchProduct,modifyWishlist };

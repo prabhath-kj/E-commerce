@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { HeartIcon } from "@heroicons/react/24/solid";
+import WishlistHeartIcon from "../common/WishListHeartIcon";
 import OrangeButton from "../common/OrangeButton";
 import { buttonNames } from "../../constants";
 import { setProducts, addProduct } from "../../redux/slices/productSlice";
@@ -88,7 +88,7 @@ const ProductList = ({ categories, filter }) => {
 
   const handleClick = (id) => {
     console.log(id);
-    id ? router(`/product-detils/${id}`) : null;
+    id ? router(`/product-details/${id}`) : null;
     return;
   };
 
@@ -117,7 +117,8 @@ const ProductList = ({ categories, filter }) => {
                   alt="product"
                 />
                 <div className="absolute top-2 right-2">
-                  <HeartIcon className="h-6 w-6 bg-blue-300 rounded-full px-1" />
+                  {/* <HeartIcon className="h-6 w-6 bg-blue-300 rounded-full px-1" /> */}
+                  <WishlistHeartIcon  id={product?._id}/>
                 </div>
               </div>
               <div className="p-4">

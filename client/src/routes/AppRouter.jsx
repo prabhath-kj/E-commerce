@@ -1,23 +1,45 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import App from "../App";
-import { AuthPage, Home, ProductPage, ErrorPage } from "../pages";
+import PrivateRoute from "./PrivateRoute";
 import Login from "../components/auth/Login";
 import Signup from "../components/auth/Signup";
-import PrivateRoute from "./PrivateRoute";
+
+const App = lazy(() => import("../App"));
+const Home = lazy(() => import("../pages/Home"));
+const ProductPage = lazy(() => import("../pages/ProductPage"));
+const ErrorPage = lazy(() => import("../pages/ErrorPage"));
+
+const FallbackUi = () => <div>Loading...</div>;
 
 const AppRouter = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
+    element: (
+      <Suspense fallback={<FallbackUi />}>
+        <App />
+      </Suspense>
+    ),
+    errorElement: (
+      <Suspense fallback={<FallbackUi />}>
+        <ErrorPage />
+      </Suspense>
+    ),
     children: [
       {
         path: "/",
-        element: <PrivateRoute children={<Home />} />,
+        element: (
+          <Suspense fallback={<FallbackUi />}>
+            <PrivateRoute children={<Home />} />
+          </Suspense>
+        ),
       },
       {
-        path: "product-detils/:productName",
-        element: <PrivateRoute children={<ProductPage />} />,
+        path: "product-details/:productName",
+        element: (
+          <Suspense fallback={<FallbackUi />}>
+            <PrivateRoute children={<ProductPage />} />
+          </Suspense>
+        ),
       },
     ],
   },

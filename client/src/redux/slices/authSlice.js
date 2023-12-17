@@ -21,9 +21,13 @@ const authSlice = createSlice({
       state.user = null;
       localStorage.removeItem('accessToken');
     },
+    updateWishlist: (state, action) => {
+      state.user = action.payload
+    
+    },
   },
 });
 
-export const { setLogin, setLogout } = authSlice.actions;
+export const { setLogin, setLogout,updateWishlist } = authSlice.actions;
 
 export default authSlice.reducer;

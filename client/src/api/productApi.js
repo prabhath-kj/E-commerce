@@ -88,6 +88,15 @@ const productApi = {
       throw error;
     }
   },
+
+  modifyWishlist: async (payload) => {
+    try {
+      const response = await instance.get(`/products/wishList/${payload}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default productApi;

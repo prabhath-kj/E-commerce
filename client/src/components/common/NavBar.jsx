@@ -1,24 +1,57 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import WishList from "./WishList";
-import { NAV_TITLES } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import productApi from "../../api/productApi";
 import React from "react";
+import {
+  HeartIcon,
+  ShoppingCartIcon,
+  UserIcon,
+  ArrowLeftIcon,
+} from "@heroicons/react/24/solid";
+import { useSelector, useDispatch } from "react-redux";
+import { setLogout } from "../../redux/slices/authSlice";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const wishProductsCount =
+    useSelector((state) => state?.auth?.user?.wishlist?.length) ?? 0;
   const router = useNavigate();
   const [isOpen, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [hideSuggestions, setHideSuggestions] = useState(false);
   const [suggestion, setSuggestion] = useState([]);
   const inputRef = useRef();
+  const user = useSelector((state) => state.auth.user);
+
+  const NAV_TITLES = [
+    {
+      title: "Wishlist",
+      icon: HeartIcon,
+      count: wishProductsCount,
+    },
+    {
+      title: "Logout",
+      icon: user ? ArrowLeftIcon : UserIcon,
+    },
+    // {
+    //   title: "Sign In",
+    //   path: "#login",
+    // },
+    {
+      title: "Cart",
+      icon: ShoppingCartIcon,
+      count: 1,
+    },
+    ,
+  ];
 
   useEffect(() => {
     const handleClick = (event) => {
       if (inputRef.current) {
         setHideSuggestions(false);
-        setSearchQuery("")
+        setSearchQuery("");
       }
     };
     document.addEventListener("click", handleClick);
@@ -49,6 +82,12 @@ const Navbar = () => {
     } catch (error) {
       console.error("Error fetching search suggestions:", error);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    dispatch(setLogout());
+    router("/login");
   };
 
   return (
@@ -89,7 +128,7 @@ const Navbar = () => {
                       key={index}
                       className="cursor-pointer py-3 hover:bg-gray-200 rounded"
                     >
-                      <Link to={`/product-detils/${suggestion?._id}`}>
+                      <Link to={`/product-details/${suggestion?._id}`}>
                         <div className="flex flex-row px-1">
                           <div className="px-2">{suggestion?.title}</div>
                         </div>
@@ -109,6 +148,8 @@ const Navbar = () => {
                   onClick={() => {
                     if (title === "Wishlist") {
                       setOpen(true);
+                    } else if (title === "Logout") {
+                      handleLogout();
                     }
                     return;
                   }}

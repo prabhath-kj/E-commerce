@@ -32,7 +32,6 @@ const Login = () => {
   const handleSubmit = async (values) => {
     try {
       const { message, token, user } = await authApi.login(values);
-      console.log(message,token,user);
       dispatch(
         setLogin({
           user: user,
