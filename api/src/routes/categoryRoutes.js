@@ -1,4 +1,5 @@
 import express from "express";
+import {authenticateJWT} from "../middlewares/jwtMiddleware.js"
 import {
   addCategory,
   getAllCategories,
@@ -7,6 +8,6 @@ const router = express.Router();
 
 router.get("/categories", getAllCategories);
 
-router.post("/categories", addCategory);
+router.post("/categories",authenticateJWT, addCategory);
 
 export default router;

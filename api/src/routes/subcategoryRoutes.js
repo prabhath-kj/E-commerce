@@ -5,6 +5,8 @@ import {
   getSubcategory,
   getAllSubcategory,
 } from "../controllers/subcategoryController.js";
+import {authenticateJWT} from "../middlewares/jwtMiddleware.js"
+
 
 const router = express.Router();
 
@@ -12,6 +14,6 @@ router.get("/", getAllSubcategory);
 
 router.get("/:categoryId", getSubcategory);
 
-router.post("/subcategories", addSubcategory);
+router.post("/subcategories",authenticateJWT, addSubcategory);
 
 export default router;
