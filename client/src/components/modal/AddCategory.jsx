@@ -2,18 +2,22 @@ import React from "react";
 import { useFormik } from "formik";
 import productApi from "../../api/productApi";
 import { toast } from "react-toastify";
+import {useDispatch} from "react-redux"
+import { addCategory } from "../../redux/slices/categorySlice";
 import * as Yup from "yup";
 
 const AddCategoryModal = ({ onClose }) => {
+  const dispatch =useDispatch()
+
   const validationSchema = Yup.object().shape({
     categoryName: Yup.string().required("Category Name is required"),
   });
 
   const onSubmit = async (values) => {
     try {
-      const response = await productApi.addCategory(values);
-     console.log(response)
-      toast.success("Category added successfully");
+      const {data,message} = await productApi.addCategory(values);
+      dispatch(addCategory(data))
+      toast.success(message);
       onClose();
     } catch (error) {
       toast.error("Failed to add category. Please try again.");

@@ -13,7 +13,6 @@ const Navbar = () => {
   const [hideSuggestions, setHideSuggestions] = useState(false);
   const [suggestion, setSuggestion] = useState([]);
   const inputRef = useRef();
-  console.log(suggestion, searchQuery);
 
   useEffect(() => {
     const handleClick = (event) => {

@@ -22,7 +22,7 @@ const signup = async (req, res) => {
 
     const token = await generateAuthToken(newUser);
     // Set the token in the browser cookie
-    return res.json({ response, token });
+    return res.json({message: "Successfully registered" , response, token });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -41,7 +41,7 @@ const login = async (req, res) => {
 
     // Set the token in the browser cookie
     return res
-      .json({ user, token});
+      .json({message: "Successfully logged in" , user, token});
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
