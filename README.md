@@ -1,8 +1,13 @@
 # Product Management Application
 
 ## Live
-- Live Link [Click](#figma-link)
+- Live Link [Click](#https://product-management-kt9t.onrender.com)
+- !!! Web service deployed on render 
 
+      ### Spinning down on idle
+
+      Render spins down a Free web service that goes 15 minutes without receiving inbound traffic. Render spins the service back up whenever it next receives a request to process.Spinning up a service takes a few seconds, which causes a noticeable delay for incoming requests until the service is back up and running. For example, a browser page load will hang momentarily.
+      
 ## Functionalities
 1. **User Authentication:**
    - Sign up and log in securely.
