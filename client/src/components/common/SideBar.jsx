@@ -35,7 +35,7 @@ const Sidebar = ({ categories, handleFilter }) => {
 
   return (
     <div className="w-1/4 px-2 text-left">
-      <h2 className="text-lg font-semibold mb-4">Categories</h2>
+      <h2 className="text-lg font-semibold mb-4 uppercase">Categories</h2>
       <ul>
         {categories.map(({ categoryName, _id }) => (
           <li key={_id} className="mb-2 cursor-pointer">

@@ -5,6 +5,7 @@ const productSchema = new Schema({
     type: String,
     unique: true,
     required: true,
+    trim: true,
   },
   subcategoryId: {
     type: Schema.Types.ObjectId,
@@ -14,6 +15,7 @@ const productSchema = new Schema({
   description: {
     type: String,
     required: true,
+    trim: true,
   },
   price: {
     type: Number,
