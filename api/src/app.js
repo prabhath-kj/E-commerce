@@ -7,6 +7,7 @@ import connectDB from "./config/dbConfig.js";
 import categoryRoutes from "./routes/categoryRoutes.js"
 import subCategoriesRoutes from "./routes/subcategoryRoutes.js"
 import productsRoutes from "./routes/productRoutes.js"
+import authRoutes from "./routes/authRoutes.js"
 
 import * as dotenv from "dotenv";
 
@@ -31,6 +32,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("short"));
 
 // Routes
+app.use("/api/auth",authRoutes)
 app.use("/api/category",categoryRoutes)
 app.use("/api/subcategory",subCategoriesRoutes)
 app.use("/api/products",productsRoutes)
