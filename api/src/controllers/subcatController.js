@@ -52,7 +52,7 @@ const getSubcategory = async (req, res) => {
     const { categoryId } = req.params;
 
     // Fetch subcategories based on categoryId
-    const subcategories = await Subcategory.find({ category: categoryId });
+    const subcategories = await SubCategorySchema.find({ category: categoryId });
     res.json(subcategories);
   } catch (error) {
     console.log(error);
