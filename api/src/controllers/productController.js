@@ -1,6 +1,7 @@
 import Product from "../models/productSchema.js";
 import dotenv from "dotenv";
-import { v2 as cloudinary } from "cloudinary";
+import cloudinar from "cloudinary";
+const cloudinary = cloudinar.v2;
 
 dotenv.config();
 
