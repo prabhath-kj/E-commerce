@@ -34,10 +34,10 @@ const SignUp = () => {
 
   const handleSubmit = async (values) => {
     try {
-      const { message, token, user } = await authApi.signup(values);
+      const { message, token, response } = await authApi.signup(values);
       dispatch(
         setLogin({
-          user: user,
+          user: response,
           token: token,
         })
       );

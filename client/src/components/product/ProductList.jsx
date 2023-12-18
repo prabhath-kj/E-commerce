@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import WishlistHeartIcon from "../common/WishListHeartIcon";
 import OrangeButton from "../common/OrangeButton";
 import { buttonNames } from "../../constants";
-import { setProducts, addProduct } from "../../redux/slices/productSlice";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AddCategoryModal from "../modal/AddCategory";
 import AddProductModal from "../modal/AddProduct";
@@ -11,9 +9,7 @@ import AddSubcategoryModal from "../modal/AddSubCategory";
 import productApi from "../../api/productApi";
 
 const ProductList = ({ categories, filter }) => {
-  // const dispatch = useDispatch();
   const router = useNavigate();
-  // const products = useSelector((state) => state.products.products);
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [modalType, setModalType] = useState(null);
@@ -118,7 +114,7 @@ const ProductList = ({ categories, filter }) => {
                 />
                 <div className="absolute top-2 right-2">
                   {/* <HeartIcon className="h-6 w-6 bg-blue-300 rounded-full px-1" /> */}
-                  <WishlistHeartIcon  id={product?._id}/>
+                  <WishlistHeartIcon id={product?._id} />
                 </div>
               </div>
               <div className="p-4">
@@ -148,9 +144,7 @@ const ProductList = ({ categories, filter }) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">${product.price}</span>
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Add to Cart
-                  </button>
+                  <OrangeButton setModalType={false}> Add to Cart</OrangeButton>
                 </div>
               </div>
             </div>

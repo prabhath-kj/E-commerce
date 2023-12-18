@@ -15,8 +15,9 @@ import { setLogout } from "../../redux/slices/authSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const wishProductsCount =
-    useSelector((state) => state?.auth?.user?.wishlist?.length) ?? 0;
+  const wishProductsCount = useSelector(
+    (state) => state?.auth?.user?.wishlist?.length
+  );
   const router = useNavigate();
   const [isOpen, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -90,6 +91,7 @@ const Navbar = () => {
     router("/login");
   };
 
+  if (!user) return;
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 bg-sky-950 opacity-100 shadow-md z-40">
@@ -155,7 +157,13 @@ const Navbar = () => {
                   }}
                 >
                   <div className="wish-list block cursor-pointer m-2">
-                    {Icon && <Icon className="w-6 h-6 text-white " />}
+                    {Icon && (
+                      <Icon
+                        className={`w-6 h-6 ${
+                          Icon == ArrowLeftIcon ? "text-red-600 bg-slate-200  round-full shadow " : " text-white"
+                        }`}
+                      />
+                    )}
                     {count && (
                       <span className="bg-orange-400 text-white rounded-full px-2 py-1 absolute -top-2 -right-0">
                         {count}
