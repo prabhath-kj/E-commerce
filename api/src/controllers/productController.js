@@ -1,9 +1,6 @@
 import Product from "../models/productSchema.js";
-import dotenv from "dotenv";
-import cloudinar from "cloudinary";
-const cloudinary = cloudinar.v2;
+import { v2 as cloudinary } from "cloudinary";
 
-dotenv.config();
 
 const secret = {
   cloud_name: process.env.CLOUDNAME,
