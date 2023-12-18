@@ -1,4 +1,3 @@
-// routes/subcategoryRoutes.js
 import express from "express";
 import {
   addSubcategory,

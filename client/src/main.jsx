@@ -8,6 +8,7 @@ import store from "./redux/store";
 import ErrorBoundary from "./components/ErrorBoundary";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
     <Provider store={store}>
