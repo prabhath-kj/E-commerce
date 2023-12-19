@@ -15,9 +15,8 @@ import { setLogout } from "../../redux/slices/authSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const wishProductsCount = useSelector(
-    (state) => state?.auth?.user?.wishlist?.length
-  );
+  const wishProductsCount =
+    useSelector((state) => state?.auth?.user?.wishlist?.length) ||null
   const router = useNavigate();
   const [isOpen, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -98,7 +97,7 @@ const Navbar = () => {
         <div className="flex flex-wrap items-center justify-between px-10 py-5">
           <Link
             to={"/"}
-            className="font-semibold sm:text-4xl text-lg text-white"
+            className="font-semibold sm:text-4xl text-base text-white"
           >
             E COMMERCE
           </Link>
@@ -160,7 +159,9 @@ const Navbar = () => {
                     {Icon && (
                       <Icon
                         className={`w-6 h-6 ${
-                          Icon == ArrowLeftIcon ? "text-red-600 bg-slate-200  round-full shadow " : " text-white"
+                          Icon == ArrowLeftIcon
+                            ? "text-red-600 bg-slate-200  round-full shadow "
+                            : " text-white"
                         }`}
                       />
                     )}

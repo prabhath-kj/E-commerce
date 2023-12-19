@@ -5,7 +5,6 @@ import {useSelector} from "react-redux"
 const PrivateRoute = ({children}) => {
     const router = useNavigate();
     const isAuth = Boolean(useSelector((state) => state?.auth?.token));
-    console.log(isAuth);
 
     useEffect(() => {
         if (!isAuth) {

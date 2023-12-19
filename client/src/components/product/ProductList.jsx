@@ -83,7 +83,6 @@ const ProductList = ({ categories, filter }) => {
       : products.filter((product) => product.subcategoryId === filter);
 
   const handleClick = (id) => {
-    console.log(id);
     id ? router(`/product-details/${id}`) : null;
     return;
   };
@@ -104,27 +103,26 @@ const ProductList = ({ categories, filter }) => {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-2 pr-2">
           {filteredProducts.map((product) => (
-            <div key={product._id} className="border rounded overflow-hidden">
+            <div key={product._id} className="border w-52 h-54 rounded overflow-hidden">
               <div className="relative">
                 <img
-                  className="w-full h-48 object-contain cursor-pointer"
+                  className="w-full h-32 object-contain cursor-pointer"
                   onClick={() => handleClick(product?._id)}
                   src={product?.images[0]}
                   alt="product"
                 />
                 <div className="absolute top-2 right-2">
-                  {/* <HeartIcon className="h-6 w-6 bg-blue-300 rounded-full px-1" /> */}
                   <WishlistHeartIcon id={product?._id} />
                 </div>
               </div>
-              <div className="p-4">
+              <div className="p-1">
                 <h3
-                  className="text-lg font-semibold mb-2 cursor-pointer"
+                  className="text-base font-normal cursor-pointer"
                   onClick={() => handleClick(product?._id)}
                 >
-                  {product?.title}
+                  {product?.title?.slice(0,10)+"..."}
                 </h3>
-                <div className="flex items-center mb-2">
+                <div className="flex items-center">
                   <span className="text-yellow-500 mr-1">{product.rating}</span>
                   {[1, 2, 3, 4, 5].map((star, index) => (
                     <svg
