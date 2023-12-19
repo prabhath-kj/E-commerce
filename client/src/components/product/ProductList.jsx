@@ -30,7 +30,7 @@ const ProductList = ({ categories, filter }) => {
           <AddSubcategoryModal onClose={closeModal} categories={categories} />
         );
       case "add-product":
-        return <AddProductModal onClose={closeModal} />;
+        return <AddProductModal onClose={closeModal}mode="add"  initialProduct={{}}  />;
       default:
         return null;
     }

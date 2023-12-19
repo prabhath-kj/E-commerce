@@ -30,7 +30,6 @@ const addProduct = async (req, res) => {
         return result.secure_url;
       })
     );
-    console.log(imageUrls);
     const newProduct = new Product({ ...req.body, images: imageUrls });
 
     const savedProduct = await newProduct.save();
@@ -131,6 +130,47 @@ const searchProduct = async (req, res) => {
   }
 };
 
+const editProduct = async (req, res) => {
+  try {
+    const images = req.files;
+    const productId = req?.params?.productId;
+    const updatedProductData = req.body;
+
+    // Check if files were uploaded
+    if (images && images.length > 0) {
+      // Process uploaded files and update 'images' field
+      const imageUrls = await Promise.all(
+        images.map(async (file) => {
+          const result = await cloudinary.uploader.upload(file.path);
+          return result.secure_url;
+        })
+      );
+      updatedProductData.images = imageUrls;
+    } else {
+      // If no new images were uploaded, remove the 'images' field from the update
+      delete updatedProductData.images;
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $set: { ...updatedProductData } },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json(updatedProduct);
+
+  } catch (error) {
+    console.error('Error editing product:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
 const modifyWishlist = async (req, res) => {
   const { productId } = req.params;
 
@@ -170,5 +210,6 @@ export {
   getPaginatedProducts,
   getSingleProduct,
   searchProduct,
+  editProduct,
   modifyWishlist,
 };

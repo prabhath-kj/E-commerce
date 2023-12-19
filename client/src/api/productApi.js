@@ -39,6 +39,15 @@ const productApi = {
     }
   },
 
+  editProduct: async (productId,productData) => {
+    try {
+      const response = await instance.post(`/products/updateProduct/${productId}`, productData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   addCategory: async (categoryData) => {
     try {
       const response = await instance.post(

@@ -7,6 +7,7 @@ import {
   getSingleProduct,
   searchProduct,
   modifyWishlist,
+  editProduct,
 } from "../controllers/productController.js";
 const router = express.Router();
 
@@ -24,5 +25,7 @@ router.post(
 );
 
 router.get("/wishList/:productId", authenticateJWT, modifyWishlist);
+
+router.post("/updateProduct/:productId", authenticateJWT,upload.array("images",3), editProduct);
 
 export default router;

@@ -8,13 +8,13 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { useEffect } from "react";
 
-const AddProductModal = ({ onClose }) => {
-  const dispatch =useDispatch()
+const AddProductModal = ({ onClose, mode, initialProduct }) => {
+  const dispatch = useDispatch();
   const [previewImages, setPreviewImages] = useState([]);
   const [images, setImages] = useState([]);
   const [imageError, setImageError] = useState(null);
   const Subcategories = useSelector((state) => state.categories.subCategory);
-  const [isAddingProduct, setIsAddingProduct] = useState(false); // New state for loading
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
@@ -28,53 +28,62 @@ const AddProductModal = ({ onClose }) => {
     subcategoryId: Yup.string().required("Subcategory is required"),
     description: Yup.string().required("Description is required"),
     images: Yup.array()
-      .required("Please provide image")
+      .required("Please add Images")
       .max(3, "Only up to 3 images allowed"),
   });
 
   const onSubmit = async (values) => {
     try {
-      setIsAddingProduct(true);
-      // Create a new FormData object
+      console.log(values);
+      setIsProcessing(true);
+
       const formData = new FormData();
 
-      // Append form data to the FormData object
       formData.append("title", values.title);
       formData.append("price", values.price);
       formData.append("quantity", values.quantity);
       formData.append("subcategoryId", values.subcategoryId);
       formData.append("description", values.description);
 
-      // Append each image file to the FormData object
       images.forEach((image) => {
         formData.append(`images`, image);
       });
 
+
       try {
-        const response = await productApi.addProduct(formData);
-        console.log(response);
-        toast.success("Product added successfully");
+        let response;
+        if (mode === "add") {
+          response = await productApi.addProduct(formData);
+          toast.success("Product added successfully");
+        } else if (mode === "edit") {
+          // Assuming you have an editProduct function in your productApi
+          response = await productApi.editProduct(
+            initialProduct?._id,
+            formData
+          );
+
+          toast.success("Product edited successfully");
+        }
+
         onClose();
       } catch (error) {
-        toast.error("Failed to add Product. Please try again.");
+        toast.error("Failed to save product. Please try again.");
         console.error("API error:", error);
       }
-
-      onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
-      setIsAddingProduct(false);
+      setIsProcessing(false);
     }
   };
 
   const formik = useFormik({
     initialValues: {
-      title: "",
-      price: "",
-      quantity: "",
-      subcategoryId: "",
-      description: "",
+      title: initialProduct?.title || "",
+      price: initialProduct?.price || "",
+      quantity: initialProduct?.quantity || "",
+      subcategoryId: initialProduct?.subcategoryId || "",
+      description: initialProduct?.description || "",
       images: [],
     },
     validationSchema,
@@ -84,7 +93,9 @@ const AddProductModal = ({ onClose }) => {
   const handleImageChange = (event) => {
     const files = event.target.files;
 
-    if (files.length > 3) {
+    if (files.length === 0) {
+      setImageError("Please provide image");
+    } else if (files.length == 0) {
       setImageError("Only up to 3 images are allowed");
     } else {
       setImageError(null);
@@ -104,6 +115,7 @@ const AddProductModal = ({ onClose }) => {
     }
   };
 
+
   const fetchAllSubcategories = async () => {
     try {
       const response = await productApi.fetchAllSubCategories();
@@ -113,22 +125,21 @@ const AddProductModal = ({ onClose }) => {
     }
   };
 
-
-useEffect(() => {
-  fetchAllSubcategories()
-}, [])
+  useEffect(() => {
+    fetchAllSubcategories();
+  }, []);
 
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-          {/*content*/}
+          {/* Modal content */}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-            {/*header*/}
+            {/* Header */}
             <div className="flex items-start justify-center p-5 border-b border-solid border-blueGray-200 rounded-t">
-              Add Product
+              {mode === "add" ? "Add Product" : "Edit Product"}
             </div>
-            {/*body*/}
+            {/* Body */}
             <form onSubmit={formik.handleSubmit}>
               <div className="relative p-6 flex-auto flex flex-wrap">
                 <div className="w-full lg:w-1/2 pr-4">
@@ -269,13 +280,13 @@ useEffect(() => {
                     <div className="text-red-500">{imageError}</div>
                   )}
                 </div>
-                {previewImages.length > 0 && (
+                {previewImages?.length > 0 && (
                   <div className="w-full mb-4">
                     <label className="block text-sm font-medium text-gray-700">
                       Image Preview
                     </label>
                     <div className="flex space-x-2">
-                      {previewImages.map((image, index) => (
+                      {previewImages?.map((image, index) => (
                         <img
                           key={index}
                           src={image}
@@ -294,13 +305,17 @@ useEffect(() => {
                   type="submit"
                   className="bg-orange-400 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 >
-                  {isAddingProduct ? "Adding..." : "Add"}
+                  {isProcessing
+                    ? "Processing..."
+                    : mode === "add"
+                    ? "Add"
+                    : "Save"}
                 </button>
                 <button
                   type="button"
                   className="bg-gray-300  text-red-500 background-transparent font-bold uppercase rounded px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   onClick={onClose}
-                  disabled={isAddingProduct}
+                  disabled={isProcessing}
                 >
                   Discard
                 </button>
