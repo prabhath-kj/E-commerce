@@ -1,12 +1,15 @@
 import instance from "../api/axiosInstance";
-
 const authApi = {
   login: async (credentials) => {
     try {
       const response = await instance.post("auth/login", credentials);
       return response.data;
     } catch (error) {
-      throw error;
+      if (error.response && error.response.status === 401) {
+        throw new Error("Invalid username or password");
+      } else {
+        throw error;
+      }
     }
   },
 
@@ -15,7 +18,11 @@ const authApi = {
       const response = await instance.post("auth/signup", credentials);
       return response.data;
     } catch (error) {
-      throw error;
+      if (error.response && error.response.status === 400) {
+        throw new Error("Username or email already exists");
+      } else {
+        throw error;
+      }
     }
   },
 
@@ -28,7 +35,5 @@ const authApi = {
     }
   },
 };
-
-// Add more functions for registration, password recovery, etc.
 
 export default authApi;
